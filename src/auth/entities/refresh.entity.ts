@@ -9,7 +9,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-// refresh-token.entity.ts
 @Entity()
 export class RefreshToken {
   @PrimaryGeneratedColumn('uuid')
@@ -17,6 +16,9 @@ export class RefreshToken {
 
   @Column({name: "token"})
   token: string;
+
+  @Column({ nullable: false, name: "user_id" })
+  userId: string;
 
   @ManyToOne(() => User, (user) => user.refreshTokens)
   @JoinColumn({ name: 'user_id' })
