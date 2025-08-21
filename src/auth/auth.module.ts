@@ -11,10 +11,13 @@ import { TokenService } from './token.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { RefreshAccessStep } from './strategies/refresh-access.step';
 import { ValidAccessStep } from './strategies/valid-access.step';
+import { ScheduleModule } from '@nestjs/schedule';
+import { RefreshTokenCleanupService } from './refresh-token.cleanup.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([RefreshToken]),
+    ScheduleModule.forRoot(),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -33,6 +36,7 @@ import { ValidAccessStep } from './strategies/valid-access.step';
     JwtStrategy,
     ValidAccessStep,
     RefreshAccessStep,
+    RefreshTokenCleanupService,
   ],
   exports: [AuthService, TokenService],
 })
