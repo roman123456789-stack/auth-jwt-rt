@@ -12,6 +12,10 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       url: this.configService.get<string>('REDIS_URL', 'redis://localhost:6379'),
     });
 
+    this.client.on('ready', () => {
+      logger.log("Redis connected successfully", "RedisService")
+    })
+
     // Опционально: логирование ошибок
     this.client.on('error', (err) => {
       console.error('Redis Client Error:', err);

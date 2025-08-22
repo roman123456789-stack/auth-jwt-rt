@@ -7,7 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { Observable, tap, catchError } from 'rxjs';
+import { Observable, tap, catchError, map } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
 interface RequestLog {
@@ -31,7 +31,6 @@ export class LoggingInterceptor implements NestInterceptor {
     const response = context.switchToHttp().getResponse();
     const now = Date.now();
 
-    // Генерируем или берём correlation ID
     const existing = request.headers['x-correlation-id'];
     const requestId = Array.isArray(existing)
         ? existing[0] // берём первый, если массив
@@ -39,9 +38,8 @@ export class LoggingInterceptor implements NestInterceptor {
         ? existing
         : uuidv4();
 
-    // ✅ Отправляем в ответ, а не в request.headers
     response.set('X-Correlation-Id', requestId);
-
+    request['requestId'] = requestId;
     const log: RequestLog = {
         requestId,
         method: request.method,
