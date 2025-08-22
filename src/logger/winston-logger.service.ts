@@ -63,8 +63,8 @@ export class WinstonLogger implements LoggerService {
   }
 }
 
-declare global {
-  var logger: WinstonLogger;
-}
+// declare global {
+//   var logger: WinstonLogger;
+// }
 
-global.logger = WinstonLogger.getInstance();
+// global.logger = WinstonLogger.getInstance();

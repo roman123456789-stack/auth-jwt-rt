@@ -1,7 +1,7 @@
 import { Injectable, LoggerService } from '@nestjs/common';
 import * as pino from 'pino';
 import { formatInTimeZone } from 'date-fns-tz';
-// TODO
+
 const moscowTime = () => formatInTimeZone(new Date(), 'Europe/Moscow', 'HH:mm:ss dd-MM-yyyy');
 
 const fileTransport = pino.transport({
@@ -12,7 +12,15 @@ const fileTransport = pino.transport({
   },
 });
 
-// Простой логгер — только JSON в stdout
+const prettyTransport = pino.transport({
+  target: 'pino-pretty',
+  options: {
+    colorize: true,
+    ignore: 'pid,hostname,levelLabel',
+    levelFirst: true,
+  },
+});
+
 const logger = pino(
   {
     level: 'debug',
@@ -21,9 +29,12 @@ const logger = pino(
         return { level: number, levelLabel: label };
         },
     },
-    timestamp: () => `"time":"${moscowTime()}"`,
+    timestamp: () => `,"time":"${moscowTime()}"`,
   },
-  fileTransport,
+  pino.multistream([
+    { stream: prettyTransport, level: 'debug' },  // в консоль — только info и выше
+    { stream: fileTransport, level: 'debug' },   // в файл — всё, включая debug
+  ]),
 );
 
 @Injectable()
@@ -64,8 +75,8 @@ export class PinoLogger implements LoggerService {
 }
 
 // Глобальный логгер
-// declare global {
-//   var logger: PinoLogger;
-// }
+declare global {
+  var logger: PinoLogger;
+}
 
-// global.logger = PinoLogger.getInstance();
+global.logger = PinoLogger.getInstance();
