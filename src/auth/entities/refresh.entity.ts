@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -14,9 +15,11 @@ export class RefreshToken {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Index()
   @Column({name: "token"})
   token: string;
 
+  @Index()
   @Column({ nullable: false, name: "user_id" })
   userId: string;
 
@@ -24,9 +27,11 @@ export class RefreshToken {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
+  @Index()
   @Column({ name: "expires_at" })
   expires_at: Date;
 
+  @Index()
   @Column({ default: false, name: 'revoked' })
   revoked: boolean;
 
