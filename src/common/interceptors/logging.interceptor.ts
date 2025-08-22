@@ -7,7 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { Observable, tap, catchError, map } from 'rxjs';
+import { Observable, tap, catchError } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
 interface RequestLog {
@@ -56,14 +56,14 @@ export class LoggingInterceptor implements NestInterceptor {
         log.userId = user.userId || user.sub;
     }
 
-    this.logger.log({
+    this.logger.debug({
         action: 'request.start',
         ...log,
     });
 
     return next.handle().pipe(
         tap(() => {
-        this.logger.log({
+        this.logger.debug({
             action: 'request.end',
             requestId,
             statusCode: response.statusCode,
