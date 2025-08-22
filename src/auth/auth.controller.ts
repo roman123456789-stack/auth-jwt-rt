@@ -6,6 +6,7 @@ import { getDeviceInfo } from './utils/device-info.util';
 import { TokenService } from './token.service';
 import { User } from './decorators/user.decorator';
 import { CurrentUser } from './types/req-user.interface';
+import { LoginRateLimitGuard } from './guards/login-rate-limit.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -15,6 +16,7 @@ export class AuthController {
   ) {}
 
   @Post('login')
+  @UseGuards(LoginRateLimitGuard)
   async login(@Body() dto: LoginDto, @Req() req) {
     const { email, password } = dto;
     const deviceInfo = getDeviceInfo(req);
