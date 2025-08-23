@@ -9,10 +9,13 @@ $ npm install
 ```bash
 # development
 $ npm run start
-
+```
+```bash
 # watch mode
 $ npm run start:dev
+```
 
+```bash
 # production mode
 $ npm run start:prod
 ```
