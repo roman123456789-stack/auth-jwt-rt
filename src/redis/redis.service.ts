@@ -16,7 +16,6 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       logger.log("Redis connected successfully", "RedisService")
     })
 
-    // Опционально: логирование ошибок
     this.client.on('error', (err) => {
       console.error('Redis Client Error:', err);
     });
@@ -33,8 +32,6 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   getClient(): RedisClientType {
     return this.client;
   }
-
-  // === Основные методы ===
 
   async set(key: string, value: string, ttl?: number): Promise<string | null> {
     if (ttl) {

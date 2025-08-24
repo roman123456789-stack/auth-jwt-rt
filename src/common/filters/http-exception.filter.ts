@@ -1,5 +1,4 @@
-// filters/http-exception.filter.ts
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException, Logger } from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { formatInTimeZone } from 'date-fns-tz';
 

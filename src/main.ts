@@ -19,7 +19,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   app.enableCors({
-    origin: '*', // или '*' для разработки
+    origin: '*',
     credentials: true,
     exposedHeaders: ['X-New-Access-Token, X-Correlation-Id'],
   });

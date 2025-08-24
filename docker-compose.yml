@@ -22,7 +22,6 @@ services:
     restart: unless-stopped
     networks:
       - app-network
-    # Добавьте эти параметры:
     command: --default-authentication-plugin=mysql_native_password
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-psecret_password"]

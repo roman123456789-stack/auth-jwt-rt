@@ -14,7 +14,7 @@ export function getDeviceInfo(request: Request): DeviceInfo {
   const parser = new (UAParser as any)(userAgent);
 
   return {
-    userAgent, // ← сохраняем оригинальный
+    userAgent,
     ip,
     browser: parser.getBrowser(),
     os: parser.getOS(),

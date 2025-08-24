@@ -15,7 +15,7 @@ export class ResponseTransformInterceptor implements NestInterceptor {
     const req = context.switchToHttp().getRequest();
     return next.handle().pipe(
       map((data) => ({
-        data, // оригинальный ответ
+        data,
         timestamp: new Date().toISOString(),
         requestId: req.requestId || null,
       })),

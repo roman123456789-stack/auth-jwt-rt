@@ -1,4 +1,3 @@
-// session-cleanup.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -16,7 +15,6 @@ export class RefreshTokenCleanupService {
   async deactivateExpiredSessions() {
     const now = new Date();
 
-    // Найти все активные сессии, у которых срок истёк
     const expiredTokens = await this.refreshTokenRepository.find({
         where: {
             revoked: false,
@@ -29,7 +27,6 @@ export class RefreshTokenCleanupService {
       return;
     }
 
-    // Сделать их неактивными
     expiredTokens.forEach((expiredTokens) => {
       expiredTokens.revoked = true;
     });
