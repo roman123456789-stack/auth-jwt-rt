@@ -1,4 +1,4 @@
-import { Injectable, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { Injectable, ExecutionContext } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ValidAccessStep } from '../strategies/valid-access.step';
 import { RefreshAccessStep } from '../strategies/refresh-access.step';

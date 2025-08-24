@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, ForbiddenException } from '@nestjs/common';
+import { Controller, Get, Post, Body, BadRequestException, UseGuards, Req, ForbiddenException, Put, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -17,10 +17,20 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(LoginRateLimitGuard)
-  async login(@Body() dto: LoginDto, @Req() req) {
+  async login(@Body() dto: LoginDto, @Req() req, @Res() res) {
     const { email, password } = dto;
     const deviceInfo = getDeviceInfo(req);
-    return await this.authService.login(email, password, deviceInfo);
+    const tokens = await this.authService.login(email, password, deviceInfo);
+
+    res.cookie('Refresh', tokens.refresh_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 14 * 24 * 60 * 60 * 1000,
+      path: '/',
+    });
+    
+    return res.json(tokens);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -42,6 +52,17 @@ export class AuthController {
   @Get('active-sessions')
   @UseGuards(JwtAuthGuard)
   async getActiveSessions(@User() user: CurrentUser) {
-    return this.tokenService.getActiveRefreshTokens(user.userId);
+    return this.tokenService.getActiveRefreshTokens(user.user_id);
+  }
+
+  @Put('sessions/crash')
+  @UseGuards(JwtAuthGuard)
+  async crashAllTokensWithoutCurrent(@Req() req, @User('user_id') userId){
+    const refreshToken = req.cookies?.Refresh;
+    if (!refreshToken) {
+      throw new BadRequestException();
+    }
+
+    return await this.authService.crashAllTokensWithoutCurrent(refreshToken, userId);
   }
 }

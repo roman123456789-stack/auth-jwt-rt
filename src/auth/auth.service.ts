@@ -31,4 +31,8 @@ export class AuthService {
       await this.tokenService.revokeRefreshToken(tokenEntry.token);
     }
   }
+
+  async crashAllTokensWithoutCurrent(refreshToken: string, userId: string){
+    return await this.tokenService.crashAllTokensWithoutCurrent(refreshToken, userId);
+  }
 }

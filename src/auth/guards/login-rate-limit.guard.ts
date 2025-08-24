@@ -1,9 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, HttpException, HttpStatus, BadRequestException } from '@nestjs/common';
 import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class LoginRateLimitGuard implements CanActivate {
-  private readonly MAX_ATTEMPTS = 5;
+  private readonly MAX_ATTEMPTS = 10;
   private readonly WINDOW_MINUTES = 15; // 15 минут
 
   constructor(private redisService: RedisService) {}
@@ -12,49 +12,35 @@ export class LoginRateLimitGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
 
     if (req.url === '/auth/login' && req.method === 'POST') {
-        const ip = this.getIp(req);
-        const key = `login-attempt:${ip}`;
+      const email = req?.body?.email;
+      if (!email) {
+        throw new BadRequestException('Email is required');
+      }
+      const key = `login-attempt:${email}`;
 
-        // 1. Получаем текущее значение
-        let currentStr = await this.redisService.get(key);
-        let current = currentStr ? parseInt(currentStr, 10) : 0;
+      // Атомарное увеличение на 1
+      const count = await this.redisService.incr(key);
 
-        // 2. Увеличиваем
-        current += 1;
+      // Устанавливаем TTL только при первом запросе
+      if (count === 1) {
+        await this.redisService.getKeyExpire(key, this.WINDOW_MINUTES * 60);
+      }
 
-        // 3. Если это первый запрос — устанавливаем TTL
-        if (current === 1) {
-        await this.redisService.set(key, '1', this.WINDOW_MINUTES * 60);
-        } else {
-        // 4. Обновляем значение
-        await this.redisService.set(key, current.toString(), this.WINDOW_MINUTES * 60);
-        }
-
-        // 5. Проверяем лимит
-        if (current > this.MAX_ATTEMPTS) {
+      if (count > this.MAX_ATTEMPTS) {
         throw new HttpException(
-            {
+          {
             statusCode: HttpStatus.TOO_MANY_REQUESTS,
             message: `Too many attempts. Please try again in ${this.WINDOW_MINUTES} minutes.`,
             error: 'Too Many Requests',
             timestamp: new Date().toISOString(),
             requestId: req['requestId'] || null,
-            },
-            HttpStatus.TOO_MANY_REQUESTS,
+          },
+          HttpStatus.TOO_MANY_REQUESTS,
         );
-        }
+      }
     }
 
     return true;
-    }
-
-  private getIp(req: any): string {
-    return (
-      req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
-      req.connection.remoteAddress ||
-      req.socket.remoteAddress ||
-      'unknown'
-    );
   }
 }
 

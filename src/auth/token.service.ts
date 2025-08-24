@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RefreshToken } from './entities/refresh.entity';
 import { MoreThan, Repository } from 'typeorm';
-import { RefreshTokenResult } from './types/refreshToken.interface';
 import { DeviceInfo } from './types/device-info.interface';
 
 @Injectable()
@@ -63,14 +62,14 @@ export class TokenService {
     return tokenEntry;
   }
 
-  public async getActiveRefreshTokens(userId: string): Promise<RefreshTokenResult[]> {
+  public async getActiveRefreshTokens(userId: string) {
     const tokens = await this.refreshTokenRepository.find({
       where: {
         user: { id: userId },
         revoked: false,
         expires_at: MoreThan(new Date()),
       },
-      select: ['id', 'created_at', 'expires_at', 'revoked', 'device_info'],
+      select: ['id', 'token', 'created_at', 'expires_at', 'revoked', 'device_info'],
       order: { created_at: 'DESC' },
     });
 
@@ -102,5 +101,23 @@ export class TokenService {
     }
     
     return tokenEntity.access_token_version;
+  }
+
+  async crashAllTokensWithoutCurrent(refreshToken: string, userId: string) {
+    
+    const activeTokens = await this.getActiveRefreshTokens(userId);
+    
+    const tokensToRevoke = activeTokens.filter(
+      token => token.token !== refreshToken
+    );
+    
+    for (const token of tokensToRevoke) {
+      await this.revokeRefreshToken(token.token);
+    }
+    
+    return {
+      message: 'All other sessions have been terminated',
+      revokedCount: tokensToRevoke.length,
+    };
   }
 }
