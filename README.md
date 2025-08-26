@@ -62,6 +62,6 @@ $ docker-compose up -d --build
 
 ```
 
-## Stay in touch
+## Оставайтесь на связи
 
-- Telegram автора - [Roman](https://t.me/nee_copirui)
+- Telegram - [Roman](https://t.me/nee_copirui)
