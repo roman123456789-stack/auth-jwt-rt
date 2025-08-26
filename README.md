@@ -53,6 +53,7 @@ DB_LOGGING=false
 
 # Адрес Redis (должен совпадать с именем сервиса в docker-compose)
 REDIS_URL=redis://redis:6379
+```
 
 ## Запуск проекта:
 
