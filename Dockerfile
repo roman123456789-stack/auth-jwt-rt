@@ -7,7 +7,7 @@ COPY package-lock.json ./
 
 RUN npm install
 RUN npm install redis
-COPY ./.env.development ./dist/.env.delelopment
+COPY ./.env.development ./dist/.env.development
 
 COPY . .
 
