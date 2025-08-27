@@ -1,14 +1,13 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
-import { TokenService } from 'src/auth/token.service';
+import { TokenService } from '../auth/token.service';
 import { plainToInstance } from 'class-transformer';
 import { UserDto } from './dto/user.dto';
-import { DeviceInfo } from 'src/auth/types/device-info.interface';
+import { DeviceInfo } from '../auth/types/device-info.interface';
 
 @Injectable()
 export class UserService {

@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Res, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { getDeviceInfo } from 'src/auth/utils/device-info.util';
+import { getDeviceInfo } from '../auth/utils/device-info.util';
 
 @Controller('user')
 export class UserController {

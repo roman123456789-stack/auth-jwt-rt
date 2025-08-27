@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
 import { RolesEnum } from '../enums/roles.enum';
-import { RefreshToken } from 'src/auth/entities/refresh.entity';
+import { RefreshToken } from '../../auth/entities/refresh.entity';
 
 @Entity()
 @Unique(['email', 'role'])
