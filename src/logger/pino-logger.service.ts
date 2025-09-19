@@ -52,9 +52,9 @@ export class PinoLogger implements LoggerService {
   log(message: string | object, context?: string) {
     this.logger.info({ context }, this.stringify(message));
   }
-
+  
   error(message: string | object, trace?: string, context?: string) {
-    this.logger.error({ context, stack: trace }, this.stringify(message));
+    this.logger.error({ context, stack: trace }, message.toString());
   }
 
   warn(message: string | object, context?: string) {
