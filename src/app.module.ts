@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { configValidationSchema } from './config/config.validation';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RedisService } from './redis/redis.service';
+import { LoggingMiddleware } from './common/middlewares/logging.middleware';
 
 
 @Module({
@@ -46,4 +47,10 @@ import { RedisService } from './redis/redis.service';
   controllers: [AppController],
   providers: [AppService, RedisService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggingMiddleware)
+      .forRoutes('*');
+  }
+}
