@@ -13,6 +13,7 @@ import { RefreshAccessStep } from './strategies/refresh-access.step';
 import { ValidAccessStep } from './strategies/valid-access.step';
 import { ScheduleModule } from '@nestjs/schedule';
 import { RefreshTokenCleanupService } from './refresh-token.cleanup.service';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -37,7 +38,8 @@ import { RefreshTokenCleanupService } from './refresh-token.cleanup.service';
     ValidAccessStep,
     RefreshAccessStep,
     RefreshTokenCleanupService,
+    JwtAuthGuard,
   ],
-  exports: [AuthService, TokenService],
+  exports: [AuthService, TokenService, JwtAuthGuard],
 })
 export class AuthModule {}
