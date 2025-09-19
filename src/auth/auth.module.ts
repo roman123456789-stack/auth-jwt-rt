@@ -26,6 +26,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
         secret: configService.get('JWT_ACCESS_SECRET'),
         signOptions: { expiresIn: configService.get('JWT_ACCESS_EXPIRES_IN') },
       }),
+      global: true,
     }),
     UserModule,
   ],
@@ -40,6 +41,6 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
     RefreshTokenCleanupService,
     JwtAuthGuard,
   ],
-  exports: [AuthService, TokenService, JwtAuthGuard],
+  exports: [AuthService, TokenService, JwtAuthGuard, RefreshAccessStep, ValidAccessStep],
 })
 export class AuthModule {}
