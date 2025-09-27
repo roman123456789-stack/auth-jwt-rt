@@ -6,9 +6,9 @@ import { ConfigService } from '@nestjs/config';
 export class RedisService implements OnModuleInit, OnModuleDestroy {
   private client: RedisClientType;
 
-  constructor(private configService: ConfigService) {
+  constructor(private config: ConfigService) {
     this.client = createClient({
-      url: this.configService.get<string>('REDIS_URL', 'redis://localhost:6379'),
+      url: this.config.getOrThrow<string>('REDIS_URL', 'redis://localhost:6379'),
     });
 
     this.client.on('ready', () => {

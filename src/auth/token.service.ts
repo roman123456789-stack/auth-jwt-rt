@@ -11,25 +11,25 @@ import { DeviceInfo } from './types/device-info.interface';
 export class TokenService {
   constructor(
     private jwtService: JwtService,
-    private configService: ConfigService,
+    private config: ConfigService,
     @InjectRepository(RefreshToken)
     private refreshTokenRepository: Repository<RefreshToken>,
   ) {}
 
   public generateNewAccessToken(userId: string, email: string, role: string, tokenVersion: number) {
-    const issuer = this.configService.get<string>('JWT_ISSUER');
+    const issuer = this.config.getOrThrow<string>('JWT_ISSUER');
     return this.jwtService.sign(
-      { userId, email, role, tokenVersion, iss: issuer },
+      { user_id: userId, email, role, tokenVersion, iss: issuer },
       {
-        secret: this.configService.get('JWT_ACCESS_SECRET'),
-        expiresIn: this.configService.get('JWT_ACCESS_EXPIRES_IN'),
+        secret: this.config.getOrThrow('JWT_ACCESS_SECRET'),
+        expiresIn: this.config.getOrThrow('JWT_ACCESS_EXPIRES_IN'),
       },
     );
   }
 
   public async generateNewRefreshToken(userId: string, deviceInfo?: DeviceInfo) {
     const token = uuidv4();
-    const ttlSeconds = this.configService.get<number>('REFRESH_TOKEN_EXPIRES_IN', 604800);
+    const ttlSeconds = this.config.getOrThrow<number>('REFRESH_TOKEN_EXPIRES_IN', 604800);
     const expiresAt = new Date(Date.now() + ttlSeconds * 1000);
 
     const refreshToken = this.refreshTokenRepository.create({

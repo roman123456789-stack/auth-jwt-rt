@@ -9,7 +9,7 @@ import { Request } from 'express';
 export class ValidAccessStep implements ITokenStep {
   constructor(
     private jwtService: JwtService,
-    private configService: ConfigService,
+    private config: ConfigService,
     private tokenService: TokenService,
   ) {}
 
@@ -20,7 +20,7 @@ export class ValidAccessStep implements ITokenStep {
 
     try {
       const payload = this.jwtService.verify(token, {
-        secret: this.configService.get('JWT_ACCESS_SECRET'),
+        secret: this.config.getOrThrow('JWT_ACCESS_SECRET'),
         ignoreExpiration: true,
       });
     

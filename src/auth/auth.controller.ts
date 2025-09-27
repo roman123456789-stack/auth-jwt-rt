@@ -17,7 +17,7 @@ export class AuthController {
 
   @UseGuards(LoginRateLimitGuard)
   @Post('login')
-  async login(@Body() dto: LoginDto, @Req() req, @Res() res) {
+  async login(@Body() dto: LoginDto, @Req() req, @Res({ passthrough: true }) res) {
     const { email, password } = dto;
     const deviceInfo = getDeviceInfo(req);
     const tokens = await this.authService.login(email, password, deviceInfo);
@@ -30,7 +30,7 @@ export class AuthController {
       path: '/',
     });
     
-    return res.json(tokens);
+    return tokens;
   }
 
   @UseGuards(JwtAuthGuard)

@@ -13,7 +13,7 @@ export class UserController {
   }
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto, @Res() res, @Req() req) {
+  async create(@Body() createUserDto: CreateUserDto, @Res({passthrough: true}) res, @Req() req) {
     const deviceInfo = getDeviceInfo(req);
 
     const registerResult = await this.userService.create(createUserDto, deviceInfo);
@@ -25,6 +25,6 @@ export class UserController {
       maxAge: 14 * 24 * 60 * 60 * 1000,
       path: '/',
     });
-    return res.json(registerResult);
+    return registerResult;
   }
 }
