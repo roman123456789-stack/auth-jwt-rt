@@ -11,6 +11,7 @@ export class LoggingMiddleware implements NestMiddleware {
     const now = Date.now();
 
     // Сохраняем ID в запросе и ответе
+    req.headers['X-Correlation-Id'] = requestId;
     req['requestId'] = requestId;
     res.setHeader('X-Correlation-Id', requestId);
 
@@ -41,7 +42,7 @@ export class LoggingMiddleware implements NestMiddleware {
       const duration = Date.now() - now;
       const status = res.statusCode;
 
-      this.logger.debug({
+      logger.debug({
         action: 'request.end',
         requestId,
         statusCode: status,
@@ -51,7 +52,7 @@ export class LoggingMiddleware implements NestMiddleware {
 
     // Логируем ошибки
     res.on('error', (err) => {
-      this.logger.error({
+      logger.error({
         action: 'request.error',
         requestId,
         statusCode: 500,

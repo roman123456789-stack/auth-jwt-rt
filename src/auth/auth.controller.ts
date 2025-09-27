@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, BadRequestException, UseGuards, Req, ForbiddenException, Put, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, BadRequestException, UseGuards, Req, ForbiddenException, Put, Res, Patch } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -15,8 +15,8 @@ export class AuthController {
     private readonly tokenService: TokenService,
   ) {}
 
-  @Post('login')
   @UseGuards(LoginRateLimitGuard)
+  @Post('login')
   async login(@Body() dto: LoginDto, @Req() req, @Res() res) {
     const { email, password } = dto;
     const deviceInfo = getDeviceInfo(req);
@@ -49,14 +49,14 @@ export class AuthController {
     return { message: 'succesfull' };
   }
 
-  @Get('active-sessions')
   @UseGuards(JwtAuthGuard)
+  @Get('active-sessions')
   async getActiveSessions(@User() user: CurrentUser) {
     return this.tokenService.getActiveRefreshTokens(user.user_id);
   }
 
-  @Put('sessions/crash')
   @UseGuards(JwtAuthGuard)
+  @Put('sessions/crash')
   async crashAllTokensWithoutCurrent(@Req() req, @User('user_id') userId){
     const refreshToken = req.cookies?.Refresh;
     if (!refreshToken) {
@@ -64,5 +64,11 @@ export class AuthController {
     }
 
     return await this.authService.crashAllTokensWithoutCurrent(refreshToken, userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('refresh')
+  async refresh(){
+    return "Обновление access_token прошло успешно";
   }
 }
