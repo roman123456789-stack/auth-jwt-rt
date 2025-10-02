@@ -16,11 +16,11 @@ export class RefreshToken {
   id: string;
 
   @Index()
-  @Column({name: "token"})
+  @Column({ name: 'token' })
   token: string;
 
   @Index()
-  @Column({ nullable: false, name: "user_id" })
+  @Column({ nullable: false, name: 'user_id' })
   userId: string;
 
   @ManyToOne(() => User, (user) => user.refreshTokens)
@@ -28,7 +28,7 @@ export class RefreshToken {
   user: User;
 
   @Index()
-  @Column({ name: "expires_at" })
+  @Column({ name: 'expires_at' })
   expires_at: Date;
 
   @Index()
@@ -38,7 +38,7 @@ export class RefreshToken {
   @Column('json', { nullable: true })
   device_info?: Record<string, any>;
 
-  @Column({type: 'int', name: 'access_token_version', default: 1})
+  @Column({ type: 'int', name: 'access_token_version', default: 1 })
   access_token_version: number;
 
   @CreateDateColumn()

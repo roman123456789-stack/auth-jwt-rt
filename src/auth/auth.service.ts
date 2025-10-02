@@ -32,7 +32,7 @@ export class AuthService {
     }
   }
 
-  async crashAllTokensWithoutCurrent(refreshToken: string, userId: string){
+  async crashAllTokensWithoutCurrent(refreshToken: string, userId: string) {
     return await this.tokenService.crashAllTokensWithoutCurrent(refreshToken, userId);
   }
 }

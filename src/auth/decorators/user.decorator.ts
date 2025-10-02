@@ -6,7 +6,7 @@ export const User = createParamDecorator(
     const request = ctx.switchToHttp().getRequest();
     const user = request.user as CurrentUser;
 
-    if (!user){
+    if (!user) {
       throw new UnauthorizedException();
     }
     return field ? user[field] : user;

@@ -25,15 +25,15 @@ const logger = pino(
   {
     level: 'debug',
     formatters: {
-        level(label, number) {
+      level(label, number) {
         return { level: number, levelLabel: label };
-        },
+      },
     },
     timestamp: () => `,"time":"${moscowTime()}"`,
   },
   pino.multistream([
-    { stream: prettyTransport, level: 'debug' },  // в консоль — только info и выше
-    { stream: fileTransport, level: 'debug' },   // в файл — всё, включая debug
+    { stream: prettyTransport, level: 'debug' }, // в консоль — только info и выше
+    { stream: fileTransport, level: 'debug' }, // в файл — всё, включая debug
   ]),
 );
 
@@ -52,7 +52,7 @@ export class PinoLogger implements LoggerService {
   log(message: string | object, context?: string) {
     this.logger.info({ context }, this.stringify(message));
   }
-  
+
   error(message: string | object, trace?: string, context?: string) {
     this.logger.error({ context, stack: trace }, message.toString());
   }

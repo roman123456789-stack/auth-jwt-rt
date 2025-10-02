@@ -11,11 +11,10 @@ import { LoggingMiddleware } from './common/middlewares/logging.middleware';
 import { TerminusModule } from '@nestjs/terminus';
 import { HttpModule } from '@nestjs/axios';
 
-
 @Module({
   imports: [
     AuthModule,
-    TerminusModule, 
+    TerminusModule,
     HttpModule,
     ConfigModule.forRoot({
       envFilePath: [`.env.${process.env.NODE_ENV}`],
@@ -53,8 +52,6 @@ import { HttpModule } from '@nestjs/axios';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggingMiddleware)
-      .forRoutes('*');
+    consumer.apply(LoggingMiddleware).forRoutes('*');
   }
 }

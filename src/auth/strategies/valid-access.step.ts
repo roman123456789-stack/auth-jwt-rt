@@ -23,12 +23,14 @@ export class ValidAccessStep implements ITokenStep {
         secret: this.config.getOrThrow('JWT_ACCESS_SECRET'),
         ignoreExpiration: true,
       });
-    
+
       logger.debug('The token is correct, it just expired', 'ValidAccessStrategy.validate');
       const currentTokenVersion = await this.tokenService.getTokenVersion(refreshToken);
-      logger.debug(`Current access token version: ${currentTokenVersion}, the version of the received token: ${payload.tokenVersion}`)
+      logger.debug(
+        `Current access token version: ${currentTokenVersion}, the version of the received token: ${payload.tokenVersion}`,
+      );
       if (payload.tokenVersion < currentTokenVersion || !payload.tokenVersion) {
-        throw new Error("The token version is invalid");
+        throw new Error('The token version is invalid');
       }
       return true;
     } catch (error) {

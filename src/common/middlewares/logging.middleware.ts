@@ -4,9 +4,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class LoggingMiddleware implements NestMiddleware {
-
   use(req: Request, res: Response, next: NextFunction) {
-    const requestId = req.headers['x-correlation-id'] as string || uuidv4();
+    const requestId = (req.headers['x-correlation-id'] as string) || uuidv4();
     const now = Date.now();
 
     // Сохраняем ID в запросе и ответе
@@ -65,11 +64,7 @@ export class LoggingMiddleware implements NestMiddleware {
   }
 
   private getClientIp(req: Request): string {
-    return (
-      (req.headers['x-forwarded-for'] as string)?.split(',')[0].trim() ||
-      req.socket.remoteAddress ||
-      'unknown'
-    );
+    return (req.headers['x-forwarded-for'] as string)?.split(',')[0].trim() || req.socket.remoteAddress || 'unknown';
   }
 
   private sanitize(obj: any): any {

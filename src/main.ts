@@ -10,9 +10,7 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { logger: PinoLogger.getInstance() });
-  app.useGlobalInterceptors(
-    new ResponseTransformInterceptor(),
-  )
+  app.useGlobalInterceptors(new ResponseTransformInterceptor());
 
   app.useGlobalFilters(new HttpExceptionFilter());
 

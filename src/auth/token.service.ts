@@ -99,22 +99,19 @@ export class TokenService {
     if (!tokenEntity) {
       throw new Error('Refresh token not found');
     }
-    
+
     return tokenEntity.access_token_version;
   }
 
   async crashAllTokensWithoutCurrent(refreshToken: string, userId: string) {
-    
     const activeTokens = await this.getActiveRefreshTokens(userId);
-    
-    const tokensToRevoke = activeTokens.filter(
-      token => token.token !== refreshToken
-    );
-    
+
+    const tokensToRevoke = activeTokens.filter((token) => token.token !== refreshToken);
+
     for (const token of tokensToRevoke) {
       await this.revokeRefreshToken(token.token);
     }
-    
+
     return {
       message: 'All other sessions have been terminated',
       revokedCount: tokensToRevoke.length,

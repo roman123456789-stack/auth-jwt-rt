@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, BadRequestException, UseGuards, Req, ForbiddenException, Put, Res, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  BadRequestException,
+  UseGuards,
+  Req,
+  ForbiddenException,
+  Put,
+  Res,
+  Patch,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -29,7 +41,7 @@ export class AuthController {
       maxAge: 14 * 24 * 60 * 60 * 1000,
       path: '/',
     });
-    
+
     return tokens;
   }
 
@@ -57,7 +69,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Put('sessions/crash')
-  async crashAllTokensWithoutCurrent(@Req() req, @User('user_id') userId){
+  async crashAllTokensWithoutCurrent(@Req() req, @User('user_id') userId) {
     const refreshToken = req.cookies?.Refresh;
     if (!refreshToken) {
       throw new BadRequestException();
@@ -68,7 +80,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Patch('refresh')
-  async refresh(){
-    return "Обновление access_token прошло успешно";
+  async refresh() {
+    return 'Обновление access_token прошло успешно';
   }
 }

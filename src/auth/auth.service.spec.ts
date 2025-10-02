@@ -60,48 +60,28 @@ describe('AuthService', () => {
       (tokenService.generateNewRefreshToken as jest.Mock).mockResolvedValue({
         token: mockTokens.refresh_token,
       });
-      (tokenService.generateNewAccessToken as jest.Mock).mockResolvedValue(
-        mockTokens.access_token,
-      );
+      (tokenService.generateNewAccessToken as jest.Mock).mockResolvedValue(mockTokens.access_token);
 
-      const result = await authService.login(
-        'test@test.com',
-        'password123',
-        { ip: '192.168.0.1', userAgent: 'Chrome' } as any,
-      );
+      const result = await authService.login('test@test.com', 'password123', {
+        ip: '192.168.0.1',
+        userAgent: 'Chrome',
+      } as any);
 
-      expect(userService.validateUser).toHaveBeenCalledWith(
-        'test@test.com',
-        'password123',
-      );
-      expect(tokenService.generateNewRefreshToken).toHaveBeenCalledWith(
-        mockUser.id,
-        { ip: '192.168.0.1', userAgent: 'Chrome' },
-      );
-      expect(tokenService.generateNewAccessToken).toHaveBeenCalledWith(
-        mockUser.id,
-        mockUser.email,
-        mockUser.role,
-        1,
-      );
+      expect(userService.validateUser).toHaveBeenCalledWith('test@test.com', 'password123');
+      expect(tokenService.generateNewRefreshToken).toHaveBeenCalledWith(mockUser.id, {
+        ip: '192.168.0.1',
+        userAgent: 'Chrome',
+      });
+      expect(tokenService.generateNewAccessToken).toHaveBeenCalledWith(mockUser.id, mockUser.email, mockUser.role, 1);
       expect(result).toEqual(mockTokens);
     });
 
     it('should throw UnauthorizedException if credentials are invalid', async () => {
       (userService.validateUser as jest.Mock).mockResolvedValue(null);
 
-      await expect(
-        authService.login(
-          'wrong@test.com',
-          'wrong-pass',
-          {} as any,
-        ),
-      ).rejects.toThrow(UnauthorizedException);
+      await expect(authService.login('wrong@test.com', 'wrong-pass', {} as any)).rejects.toThrow(UnauthorizedException);
 
-      expect(userService.validateUser).toHaveBeenCalledWith(
-        'wrong@test.com',
-        'wrong-pass',
-      );
+      expect(userService.validateUser).toHaveBeenCalledWith('wrong@test.com', 'wrong-pass');
       expect(tokenService.generateNewRefreshToken).not.toHaveBeenCalled();
     });
   });
@@ -115,9 +95,7 @@ describe('AuthService', () => {
 
       await authService.logout(refreshToken);
 
-      expect(tokenService.findValidRefreshToken).toHaveBeenCalledWith(
-        refreshToken,
-      );
+      expect(tokenService.findValidRefreshToken).toHaveBeenCalledWith(refreshToken);
       expect(tokenService.revokeRefreshToken).toHaveBeenCalledWith(refreshToken);
     });
 
@@ -137,10 +115,7 @@ describe('AuthService', () => {
 
       await authService.crashAllTokensWithoutCurrent(refreshToken, userId);
 
-      expect(tokenService.crashAllTokensWithoutCurrent).toHaveBeenCalledWith(
-        refreshToken,
-        userId,
-      );
+      expect(tokenService.crashAllTokensWithoutCurrent).toHaveBeenCalledWith(refreshToken, userId);
     });
   });
 });

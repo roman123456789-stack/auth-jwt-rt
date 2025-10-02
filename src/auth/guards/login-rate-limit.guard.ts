@@ -1,4 +1,11 @@
-import { Injectable, CanActivate, ExecutionContext, HttpException, HttpStatus, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+  HttpStatus,
+  BadRequestException,
+} from '@nestjs/common';
 import { RedisService } from '../../redis/redis.service';
 
 @Injectable()
@@ -43,4 +50,3 @@ export class LoginRateLimitGuard implements CanActivate {
     return true;
   }
 }
-

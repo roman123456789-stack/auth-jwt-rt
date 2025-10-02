@@ -23,12 +23,12 @@ export class RefreshAccessStep implements ITokenStep {
       }
 
       const accessTokenVersion = await this.tokenService.getAndIncrementTokenVersion(refreshToken);
-      
+
       const newAccessToken = await this.tokenService.generateNewAccessToken(
         tokenEntry.user.id,
         tokenEntry.user.email,
         tokenEntry.user.role,
-        accessTokenVersion
+        accessTokenVersion,
       );
 
       response.setHeader('X-New-Access-Token', newAccessToken);

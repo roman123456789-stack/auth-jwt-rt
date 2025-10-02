@@ -7,7 +7,6 @@ import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
-
 import { DeviceInfo } from './types/device-info.interface';
 
 // Моки
@@ -26,7 +25,8 @@ const mockRepository = {
 };
 
 const mockDeviceInfo: DeviceInfo = {
-  userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
+  userAgent:
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
   ip: '192.168.1.1',
   browser: {
     name: 'Safari',
@@ -49,7 +49,6 @@ const mockRole = 'USER';
 const mockToken = 'refresh-token-123';
 const mockExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 const mockTokenVersion = 5;
-
 
 describe('TokenService', () => {
   let service: TokenService;
@@ -85,10 +84,7 @@ describe('TokenService', () => {
   it('should generate JWT access token with correct payload and options', () => {
     // Подготовка
     const issuer = 'test-issuer';
-    mockConfigGet
-      .mockReturnValueOnce(issuer)
-      .mockReturnValueOnce('access-secret')
-      .mockReturnValueOnce('15m');
+    mockConfigGet.mockReturnValueOnce(issuer).mockReturnValueOnce('access-secret').mockReturnValueOnce('15m');
 
     mockJwtSign.mockReturnValue('signed.jwt.token');
 
@@ -141,6 +137,4 @@ describe('TokenService', () => {
     expect(mockRepository.save).toHaveBeenCalled();
     expect(result).toEqual({ token: mockToken, expiresAt: expect.any(Date) });
   });
-
-  
-})
+});

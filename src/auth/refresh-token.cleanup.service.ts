@@ -16,10 +16,10 @@ export class RefreshTokenCleanupService {
     const now = new Date();
 
     const expiredTokens = await this.refreshTokenRepository.find({
-        where: {
-            revoked: false,
-            expires_at: LessThan(now),
-        },
+      where: {
+        revoked: false,
+        expires_at: LessThan(now),
+      },
     });
 
     if (expiredTokens.length === 0) {
@@ -36,7 +36,7 @@ export class RefreshTokenCleanupService {
   }
 
   @Cron('0 */5 * * * *')
-  async handleCron(){
+  async handleCron() {
     await this.deactivateExpiredSessions();
   }
 }

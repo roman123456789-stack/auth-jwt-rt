@@ -1,6 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { HealthCheckService, HttpHealthIndicator, HealthCheck, DiskHealthIndicator, MemoryHealthIndicator, TypeOrmHealthIndicator } from '@nestjs/terminus';
+import {
+  HealthCheckService,
+  HttpHealthIndicator,
+  HealthCheck,
+  DiskHealthIndicator,
+  MemoryHealthIndicator,
+  TypeOrmHealthIndicator,
+} from '@nestjs/terminus';
 
 @Controller()
 export class AppController {
@@ -20,10 +27,10 @@ export class AppController {
 
   @Get('health')
   @HealthCheck()
-   check() {
+  check() {
     return this.health.check([
       () => this.http.pingCheck('network_ping_yandex', 'http://yandex.ru'),
-      () => this.disk.checkStorage('storage', {  path: '/', thresholdPercent: 0.8 }),
+      () => this.disk.checkStorage('storage', { path: '/', thresholdPercent: 0.8 }),
       () => this.memory.checkRSS('memory_rss', 4 * 1024 * 1024 * 1024),
       () => this.db.pingCheck('database'),
     ]);
