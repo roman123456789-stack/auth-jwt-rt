@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+
+  api_gateaway:
+    build:
+      context: ../api_gateaway
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
   auth_microservice:
     build:
       context: ./
